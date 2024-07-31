@@ -102,21 +102,25 @@ void Geometry::PrintNumMeets()
             int c = point_array[j]->GetX() * point_array[i]->GetY() - point_array[i]->GetX() * point_array[j]->GetY();
 
             int pos_side = 0, neg_side = 0;
-
+            // 다른 두 점을 선택하여 해당 직선의 다른 쪽에 있는지 확인한다
             for (int k = 0; k < num_points; ++k) {
                 if (k == i || k == j)
                     continue;
 
-                int value = a * point_array[k]->GetX() + b * point_array[k]->GetY() + c;
+                int f_k = a * point_array[k]->GetX() + b * point_array[k]->GetY() + c;
 
-                if (value > 0)
-                    pos_side++;
-                else if (value < 0)
-                    neg_side++;
+                for (int l = k + 1; l < num_points; ++l) {
+                    if (l == i || l == j)
+                        continue;
+
+                    int f_l = a * point_array[l]->GetX() + b * point_array[l]->GetY() + c;
+
+                    // 두 점이 서로 다른 쪽에 있는지 확인
+                    if (f_k * f_l < 0) {
+                        num_meets++;
+                    }
+                }
             }
-
-            if (pos_side > 0 && neg_side > 0)
-                num_meets++;
         }
     }
 
