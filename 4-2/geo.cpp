@@ -5,7 +5,7 @@
 
 using combinations = std::vector<std::tuple<int, int>>;
 
-void combination_2(int min, int max, combinations& res)
+void Combination2(int min, int max, combinations& res)
 {
     if (min == max) {
         return;
@@ -14,7 +14,7 @@ void combination_2(int min, int max, combinations& res)
     for (int i = min + 1; i <= max; ++i) {
         res.push_back({ min, i });
     }
-    combination_2(min + 1, max, res);
+    Combination2(min + 1, max, res);
 }
 
 class Point
@@ -28,20 +28,20 @@ public:
         y = pos_y;
     }
 
-    int getX() const
+    int GetX() const
     {
         return x;
     }
 
-    int getY() const
+    int GetY() const
     {
         return y;
     }
 
-    int distance_to(const Point& other)
+    int DistanceTo(const Point& other)
     {
-        int dx = other.getX() - x;
-        int dy = other.getY() - y;
+        int dx = other.GetX() - x;
+        int dy = other.GetY() - y;
         return std::sqrt(dx * dx + dy * dy);
     }
 };
@@ -56,7 +56,7 @@ public:
 
     void AddPoint(const Point& point)
     {
-        point_array[num_points++] = new Point(point.getX(), point.getY());
+        point_array[num_points++] = new Point(point.GetX(), point.GetY());
     }
 
     // 모든 점들 간의 거리를 출력하는 함수 입니다.
@@ -77,7 +77,7 @@ private:
 void Geometry::PrintDistance()
 {
     combinations combinations;
-    combination_2(0, num_points - 1, combinations);
+    Combination2(0, num_points - 1, combinations);
 
     int distance = 0;
     for (auto combination : combinations) {
@@ -86,20 +86,39 @@ void Geometry::PrintDistance()
         Point fst_point = *point_array[fst];
         Point snd_point = *point_array[snd];
 
-        distance += fst_point.distance_to(snd_point);
+        distance += fst_point.DistanceTo(snd_point);
     }
     std::cout << "sum of distance between every points: " << distance << std::endl;
 }
 
 void Geometry::PrintNumMeets()
 {
-}
+    int num_meets = 0;
 
-int main()
-{
-    combinations combinations;
-    combination_2(0, 10, combinations);
-    for (auto combination : combinations) {
-        std::cout << "(" << std::get<0>(combination) << ", " << std::get<1>(combination) << ")" << std::endl;
+    for (int i = 0; i < num_points; ++i) {
+        for (int j = i + 1; j < num_points; ++j) {
+            int a = point_array[j]->GetY() - point_array[i]->GetY();
+            int b = point_array[i]->GetX() - point_array[j]->GetX();
+            int c = point_array[j]->GetX() * point_array[i]->GetY() - point_array[i]->GetX() * point_array[j]->GetY();
+
+            int pos_side = 0, neg_side = 0;
+
+            for (int k = 0; k < num_points; ++k) {
+                if (k == i || k == j)
+                    continue;
+
+                int value = a * point_array[k]->GetX() + b * point_array[k]->GetY() + c;
+
+                if (value > 0)
+                    pos_side++;
+                else if (value < 0)
+                    neg_side++;
+            }
+
+            if (pos_side > 0 && neg_side > 0)
+                num_meets++;
+        }
     }
+
+    std::cout << "Number of intersections: " << num_meets << std::endl;
 }
