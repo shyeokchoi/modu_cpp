@@ -48,7 +48,9 @@ string::string(const string& s)
 
 string::~string()
 {
-    delete[] str;
+    if (str) {
+        delete[] str;
+    }
 }
 
 void string::add_string(const string& s)
