@@ -14,7 +14,6 @@ public:
     void add_string(const string& s);  // str 뒤에 s 를 붙인다.
     void copy_string(const string& s); // str 에 s 를 복사한다.
     int strlen() const;                // 문자열 길이 리턴
-    char* get_str() const;             // 문자열 내용물 리턴
 };
 
 string::string(char c, int n)
@@ -55,7 +54,7 @@ string::~string()
 
 void string::add_string(const string& s)
 {
-    char* s_str = s.get_str();
+    char* s_str = s.str;
     int s_len = s.strlen();
 
     char* temp = new char[len + s_len];
@@ -75,7 +74,7 @@ void string::add_string(const string& s)
 
 void string::copy_string(const string& s)
 {
-    char* s_str = s.get_str();
+    char* s_str = s.str;
     int s_len = s.strlen();
 
     if (s_len != len) {
@@ -93,9 +92,4 @@ void string::copy_string(const string& s)
 int string::strlen() const
 {
     return len;
-}
-
-char* string::get_str() const
-{
-    return str;
 }
